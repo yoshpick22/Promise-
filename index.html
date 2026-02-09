@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digital Promise | MrTechnician</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --dark: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            background: var(--dark);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Background Glow */
+        .glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212,175,55,0.2) 0%, transparent 70%);
+            z-index: 1;
+        }
+
+        .page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            width: 85%;
+            max-width: 450px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            z-index: 10;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .active { display: flex; animation: fadeIn 1s ease forwards; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 { font-family: 'Dancing Script', cursive; color: var(--gold); font-size: 3rem; margin: 0; }
+        p { color: #ccc; line-height: 1.6; font-weight: 300; }
+
+        /* Photo Section */
+        .img-container {
+            width: 200px;
+            height: 200px;
+            border: 4px solid var(--gold);
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(212,175,55,0.3);
+        }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Promise Typing Area */
+        #promise-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            min-height: 80px;
+            color: white;
+        }
+
+        .btn {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            padding: 12px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 25px;
+            font-weight: bold;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn:hover { background: var(--gold); color: black; box-shadow: 0 0 20px var(--gold); }
+
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-top: 20px;
+            display: none;
+        }
+
+        .footer { position: absolute; bottom: 20px; font-size: 0.7rem; color: #555; }
+        .footer b { color: var(--gold); }
+    </style>
+</head>
+<body>
+
+    <div class="glow"></div>
+
+    <div id="p1" class="page active">
+        <h2>February 11</h2>
+        <h1>A Royal Promise</h1>
+        <p>Before the stars and the digital world, I have a few things to tell you...</p>
+        <button class="btn" onclick="next(2)">Enter My Heart</button>
+    </div>
+
+    <div id="p2" class="page">
+        <h1>For This Face...</h1>
+        <div class="img-container">
+            <img src="f7ac3e794896eff38a22ab147916c452.jpg" alt="Our Memory">
+        </div>
+        <p>I would do anything to keep this smile alive forever.</p>
+        <button class="btn" onclick="next(3)">The Promises</button>
+    </div>
+
+    <div id="p3" class="page">
+        <h1>I Promise...</h1>
+        <div id="promise-text"></div>
+        <button class="btn" id="nextBtn" style="display:none;" onclick="next(4)">Seal the Bond</button>
+    </div>
+
+    <div id="p4" class="page">
+        <h1>Forever Yours</h1>
+        <p>Do you accept this digital bond of love?</p>
+        <button class="btn" id="signBtn" onclick="seal()">I Accept ❤️</button>
+        <div class="signature" id="sigText">Signed with Love</div>
+        <p style="margin-top: 30px; font-size: 0.8rem;">A lifelong commitment.</p>
+    </div>
+
+    <div class="footer">Certified by <b>MrTechnician</b></div>
+
+    <script>
+        const promises = [
+            "I promise to be your strength when you are weak.",
+            "I promise to listen even when you don't speak.",
+            "I promise to choose you, every single day.",
+            "I promise my heart is yours, always."
+        ];
+        
+        let pIndex = 0;
+
+        function next(num) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('p' + num).classList.add('active');
+            if(num === 3) startPromises();
+        }
+
+        function startPromises() {
+            if (pIndex < promises.length) {
+                const el = document.getElementById("promise-text");
+                el.innerHTML = "";
+                let charIndex = 0;
+                let txt = promises[pIndex];
+
+                function type() {
+                    if (charIndex < txt.length) {
+                        el.innerHTML += txt.charAt(charIndex);
+                        charIndex++;
+                        setTimeout(type, 50);
+                    } else {
+                        pIndex++;
+                        setTimeout(startPromises, 2000);
+                    }
+                }
+                type();
+            } else {
+                document.getElementById('nextBtn').style.display = 'block';
+            }
+        }
+
+        function seal() {
+            document.getElementById('signBtn').style.display = 'none';
+            document.getElementById('sigText').style.display = 'block';
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#d4af37', '#ffffff']
+            });
+        }
+    </script>
+</body>
+</html>
